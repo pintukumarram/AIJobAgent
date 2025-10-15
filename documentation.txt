@@ -1,0 +1,95 @@
+JobAgent/
+├── frontend/                    # Next.js + Tailwind (UI Layer)
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── login/
+│   │   │   │   └── page.jsx
+│   │   │   ├── register/
+│   │   │   │   └── page.jsx
+│   │   │   ├── forgot-password/
+│   │   │   │   └── page.jsx
+│   │   │   ├── dashboard/
+│   │   │   │   ├── page.jsx
+│   │   │   │   └── layout.jsx
+│   │   │   ├── jobs/
+│   │   │   │   └── page.jsx
+│   │   │   ├── profile/
+│   │   │   │   └── page.jsx
+│   │   │   ├── settings/
+│   │   │   │   └── page.jsx
+│   │   │   ├── api/             # (Frontend API routes - optional proxy)
+│   │   |── components/
+│   │   |    ├── DashboardLayout.jsx
+│   │   |    ├── DashboardPage.jsx
+│   │   |    ├── JobsTable.jsx
+│   │   |    ├── JobCard.jsx
+│   │   |    ├── NavBar.jsx
+│   │   |    └── SideBar.jsx
+|   |   |-----context/
+|   |             |_AuthContext.jsx
+│   ├
+|   |
+|   | ── public/
+│   ├── package.json
+│   └── next.config.js
+
+├── backend/                     # Express.js backend (core API)
+│   ├── src/
+│   │   ├── config/
+│   │   │   ├── db.js           # MongoDB or PostgreSQL connection
+│   │   │   └── env.js
+│   │   ├── models/
+│   │   │   ├── User.js
+│   │   │   ├── Job.js
+│   │   │   └── Application.js
+│   │   ├── routes/
+│   │   │   ├── authRoutes.js   # Register, Login, Forgot password
+│   │   │   ├── jobRoutes.js    # Job CRUD, Fetch jobs, Status tracking
+│   │   │   ├── userRoutes.js
+│   │   ├── controllers/
+│   │   │   ├── authController.js
+│   │   │   ├── jobController.js
+│   │   │   └── userController.js
+│   │   ├── middleware/
+│   │   │   ├── authMiddleware.js
+│   │   │   └── errorHandler.js
+│   │   ├── utils/
+│   │   │   ├── emailSender.js  # Send job notifications
+│   │   │   ├── scraper.js      # Job scraping logic
+│   │   │   └── resumeParser.js # Calls FastAPI microservice
+│   │   ├── server.js
+│   └── package.json
+
+├── ai_service/                  # FastAPI microservice (AI/ML logic)
+│   ├── main.py
+│   ├── routers/
+│   │   ├── match_jobs.py       # AI model for job matching
+│   │   ├── parse_resume.py     # Resume parsing using NLP
+│   │   └── auto_apply.py       # Auto application submission logic
+│   ├── models/
+│   │   ├── job_model.pkl       # Saved ML model
+│   │   └── vectorizer.pkl
+│   ├── utils/
+│   │   ├── nlp_utils.py
+│   │   ├── embeddings.py
+│   │   └── email_utils.py
+│   ├── requirements.txt
+│   └── Dockerfile
+
+├── database/                    # Optional (scripts or seed data)
+│   ├── seed_jobs.json
+│   ├── init_db.js
+│   └── migration.sql
+
+├── docker-compose.yml           # To run frontend + backend + AI service together
+├── .env                         # Environment variables for backend
+├── .gitignore
+└── README.md
+
+
+
+
+10/10.2025-> There are issue sin sidebar  in Jobs and in   Dashboard overview-Job Scraped, Matched Jobs
+Error- Failed to fetch
+
+13/10/2025-> Issue resolved for the above mentioned.
