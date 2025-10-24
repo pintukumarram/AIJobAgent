@@ -16,7 +16,7 @@ const router = express.Router();
 router.get("/", getAllJobs);
 
 // CREATE a job
-router.post("/", authorizeRoles("recruiter", "admin"), createJob);
+router.post("/", protect,authorizeRoles("recruiter", "admin"), createJob);
 
 // GET job by ID
 router.get("/:id", getJobById);
