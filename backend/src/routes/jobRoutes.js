@@ -2,6 +2,7 @@
 import express from "express";
 import {
   getAllJobs,
+  getMyJobs,
   createJob,
   getJobById,
   updateJob,
@@ -18,16 +19,20 @@ router.get("/", getAllJobs);
 // CREATE a job
 router.post("/", protect,authorizeRoles("recruiter", "admin"), createJob);
 
+router.get("/my-jobs", protect, authorizeRoles("recruiter", "admin"), getMyJobs);
+
 // GET job by ID
 router.get("/:id", getJobById);
 
 // UPDATE job
-router.put("/:id", authorizeRoles("recruiter", "admin"), updateJob);
+router.put("/:id", protect, updateJob);
 
 // DELETE job
 router.delete("/:id", authorizeRoles("recruiter", "admin"), deleteJob);
 
 // APPLY to a job
 router.post("/:id/apply",protect, applyToJob);
+
+// router.get("/my-jobs", protect, authorizeRoles("recruiter"), getRecruiterJobs);
 
 export default router;

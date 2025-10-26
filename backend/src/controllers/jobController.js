@@ -13,15 +13,29 @@ export const getAllJobs = async (req, res) => {
   }
 };
 
-// Create new job
+// Create a new job
 export const createJob = async (req, res) => {
   try {
-    const job = await Job.create(req.body);
+    const { title, company, role, location, salary, jobType, description } = req.body;
+
+    const job = await Job.create({
+      title,
+      company,
+      role,
+      location,
+      salary,
+      jobType,
+      description,
+      postedBy: req.user.id, // 👈 recruiter ID
+    });
+
     res.status(201).json(job);
   } catch (error) {
     res.status(500).json({ message: "Failed to create job", error: error.message });
   }
 };
+
+
 // Get single job by ID
 export const getJobById = async (req, res, next) => {
   try {
@@ -34,17 +48,24 @@ export const getJobById = async (req, res, next) => {
 };
 
 // Update a job
-export const updateJob = async (req, res, next) => {
+export const updateJob = async (req, res) => {
   try {
-    const job = await Job.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
+    const job = await Job.findById(req.params.id);
     if (!job) return res.status(404).json({ message: "Job not found" });
-    res.status(200).json(job);
-  } catch (error) {
-    next(error);
+
+    // Only admin or the original poster can edit
+    if (req.user.role !== "admin" && job.postedBy.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not authorized to edit this job" });
+    }
+
+    const updated = await Job.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(updated);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 };
+
 
 // Delete a job
 export const deleteJob = async (req, res, next) => {
@@ -60,34 +81,39 @@ export const deleteJob = async (req, res, next) => {
 // Apply to a job
 export const applyToJob = async (req, res) => {
   try {
-    const { id } = req.params;
-    const userId = req.user?.id; // Assumes JWT middleware sets req.user
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
 
-    if (!userId) {
-      return res.status(401).json({ message: "Unauthorized" });
+    // 🚫 Block recruiter/admin from applying
+    if (req.user.role !== "user") {
+      return res.status(403).json({ message: "Recruiters/Admins cannot apply to jobs" });
     }
 
-    const job = await Job.findById(id);
-    if (!job) {
-      return res.status(404).json({ message: "Job not found" });
-    }
+    const job = await Job.findById(req.params.id);
+    if (!job) return res.status(404).json({ message: "Job not found" });
 
     // Check if already applied
-    const existingApp = await Application.findOne({ user: userId, job: id });
-    if (existingApp) {
+    const existingApp = await Application.findOne({ user: userId, job: job._id });
+    if (existingApp)
       return res.status(400).json({ message: "You already applied to this job" });
-    }
 
-    const application = new Application({
-      user: userId,
-      job: id,
-      status: "Applied",
-    });
+    const application = new Application({ user: userId, job: job._id });
     await application.save();
 
     res.status(201).json({ message: "Application submitted successfully", application });
   } catch (error) {
-    console.error("Apply Job Error:", error);
+    console.error(error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+// Get jobs posted by logged-in recruiter
+export const getMyJobs = async (req, res) => {
+  try {
+    const jobs = await Job.find({ postedBy: req.user.id });
+    res.json(jobs);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch recruiter jobs" });
   }
 };

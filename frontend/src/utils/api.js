@@ -1,21 +1,21 @@
-export const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+export const apiRequest = async (endpoint, method = "GET", data = null, token = null) => {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
-export async function apiRequest(endpoint, method = "GET", body = null, token = null) {
-  const url = `${API_BASE.replace(/\/$/, "")}/${endpoint.replace(/^\//, "")}`;
+  const headers = {
+    "Content-Type": "application/json",
+  };
 
-  const headers = { "Content-Type": "application/json" };
-  if (token) headers.Authorization = `Bearer ${token}`;
-
-  const res = await fetch(url, {
-    method,
-    headers,
-    body: method !== "GET" ? JSON.stringify(body) : null,
-  });
-
-  if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.message || `API request failed: ${res.status}`);
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
-  return res.json();
-}
+  const res = await fetch(`${API_BASE_URL}${endpoint}`, {
+    method,
+    headers,
+    body: data ? JSON.stringify(data) : null,
+  });
+
+  const result = await res.json();
+  if (!res.ok) throw new Error(result.message || "Request failed");
+  return result;
+};

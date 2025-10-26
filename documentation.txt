@@ -93,3 +93,98 @@ JobAgent/
 Error- Failed to fetch
 
 13/10/2025-> Issue resolved for the above mentioned.
+
+
+
+Updated folder structure
+
+JobAgent/
+│
+├── frontend/                             # Phase 1–4 (UI Layer)
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── login/page.jsx
+│   │   │   ├── register/page.jsx
+│   │   │   ├── forgot-password/page.jsx
+│   │   │   ├── dashboard/
+│   │   │   │   ├── layout.jsx
+│   │   │   │   └── page.jsx
+│   │   │   ├── jobs/
+│   │   │   │   ├── page.jsx
+│   │   │   │   └── match/page.jsx       # 🆕 Phase 5 (AI job matching)
+│   │   │   ├── profile/page.jsx          # 🆕 Resume Upload & Parse
+│   │   │   ├── settings/page.jsx
+│   │   │   └── api/                      # Optional proxy routes
+│   │   │
+│   │   ├── components/
+│   │   │   ├── DashboardLayout.jsx
+│   │   │   ├── DashboardPage.jsx
+│   │   │   ├── JobsTable.jsx
+│   │   │   ├── JobCard.jsx
+│   │   │   ├── NavBar.jsx
+│   │   │   └── SideBar.jsx
+│   │   │
+│   │   ├── context/AuthContext.jsx
+│   │   └── utils/api.js
+│   │
+│   ├── public/
+│   ├── package.json
+│   └── next.config.js
+│
+│
+├── backend/                              # Phase 2–4 (API + DB Layer)
+│   ├── src/
+│   │   ├── config/
+│   │   │   ├── db.js
+│   │   │   └── env.js
+│   │   ├── models/
+│   │   │   ├── User.js
+│   │   │   ├── Job.js
+│   │   │   └── Application.js
+│   │   ├── routes/
+│   │   │   ├── authRoutes.js
+│   │   │   ├── jobRoutes.js
+│   │   │   ├── userRoutes.js
+│   │   │   └── aiRoutes.js               # 🆕 Phase 5 route
+│   │   ├── controllers/
+│   │   │   ├── authController.js
+│   │   │   ├── jobController.js
+│   │   │   ├── userController.js
+│   │   │   └── aiController.js           # 🆕 Phase 5 controller
+│   │   ├── middleware/
+│   │   │   ├── authMiddleware.js
+│   │   │   └── errorHandler.js
+│   │   ├── utils/
+│   │   │   ├── emailSender.js
+│   │   │   ├── scraper.js
+│   │   │   └── resumeParser.js           # 🆕 Calls FastAPI
+│   │   ├── server.js
+│   │   └── package.json
+│
+│
+├── ai_service/                           # 🆕 Phase 5 (AI & Automation)
+│   ├── main.py
+│   ├── routers/
+│   │   ├── parse_resume.py
+│   │   ├── match_jobs.py
+│   │   └── auto_apply.py
+│   ├── models/
+│   │   ├── job_model.pkl
+│   │   └── vectorizer.pkl
+│   ├── utils/
+│   │   ├── nlp_utils.py
+│   │   ├── embeddings.py
+│   │   └── email_utils.py
+│   ├── requirements.txt
+│   └── Dockerfile
+│
+│
+├── database/
+│   ├── seed_jobs.json
+│   ├── init_db.js
+│   └── migration.sql
+│
+├── docker-compose.yml
+├── .env
+├── .gitignore
+└── README.md
